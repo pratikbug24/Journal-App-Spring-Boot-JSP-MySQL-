@@ -72,6 +72,42 @@ POST   /api/journal        → Create entry
 DELETE /api/journal/{id}   → Delete entry
 ```
 -------
+⚙️ Setup Instructions
+
+1️⃣ Clone Repository
+```
+git clone https://github.com/your-username/journalApp.git
+cd journalApp
+```
+---------
+2️⃣ Configure Database
+
+Open phpMyAdmin and create a database:
+```
+CREATE DATABASE journaldb;
+```
+------
+3️⃣ Update application.properties
+spring.datasource.url=jdbc:mysql://localhost:3306/journaldb
+spring.datasource.username=root
+spring.datasource.password=
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+4️⃣ Build Project
+```
+mvn clean install
+```
+5️⃣ Run Application
+```
+mvn spring-boot:run
+```
+OR
+```
+java -jar target/journalApp-0.0.1-SNAPSHOT.jar
+```
+--------
 
 🧠 How It Works
 
