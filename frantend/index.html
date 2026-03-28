@@ -2,22 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Journal App</title>
+    <title>Journal Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
+<div class="wrapper">
 
-    <h1>📓 My Journal</h1>
-
-    <div class="form-card">
-        <input type="text" id="title" placeholder="Title">
-        <textarea id="content" placeholder="Write your thoughts..."></textarea>
-        <button onclick="addEntry()">Add Entry</button>
+    <div class="header">
+        <h1>📔 Journal Dashboard</h1>
     </div>
 
-    <div id="entries" class="entries"></div>
+    <!-- Google Keep Trigger -->
+    <div class="note-trigger" onclick="openModal()">
+        Take a note...
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+
+            <input type="text" id="title" placeholder="Title">
+
+            <textarea id="content" placeholder="Take a note..." 
+                      oninput="autoExpand(this)"></textarea>
+
+            <div class="modal-actions">
+                <button onclick="addEntry()">Add</button>
+                <button onclick="closeModal()">Close</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Entries -->
+    <div id="entries" class="grid"></div>
 
 </div>
 
