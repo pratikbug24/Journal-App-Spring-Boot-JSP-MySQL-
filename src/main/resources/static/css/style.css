@@ -1,0 +1,254 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(120deg, #1e3c72, #2a5298);
+    padding: 20px;
+}
+
+/* Wrapper */
+.wrapper {
+    width: 95%;              /* ❌ fixed (was 500%) */
+    max-width: 1400px;
+    margin: auto;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+/* NOTE TRIGGER */
+.note-trigger {
+    width: 60%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 12px;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    color: #666;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+}
+
+/* ENTRY */
+.entry {
+    background: rgba(255,255,255,0.2);
+    padding: 15px;
+    border-radius: 12px;
+    color: white;
+    transition: 0.3s;
+}
+
+.entry:hover {
+    transform: scale(1.05);
+}
+
+/* DELETE BUTTON */
+.delete-btn {
+    background: #ff4d4d;
+    border: none;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 500px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+/* INPUT */
+.modal-content input,
+.modal-content textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.modal-content textarea {
+    resize: none;
+    overflow: hidden;
+}
+
+/* ACTIONS */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* MODAL BACKDROP */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+/* SHOW MODAL */
+.modal.active {
+    display: flex;
+}
+
+/* MODAL BOX */
+.modal-content {
+    width: 90%;
+    max-width: 520px;
+
+    padding: 25px;
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+
+    animation: scaleIn 0.3s ease;
+}
+
+/* INPUT */
+.modal-content input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+
+    border: none;
+    outline: none;
+    border-radius: 8px;
+
+    background: rgba(255,255,255,0.2);
+    color: white;
+    font-size: 16px;
+}
+
+/* TEXTAREA */
+.modal-content textarea {
+    width: 100%;
+    padding: 12px;
+
+    border: none;
+    outline: none;
+    border-radius: 8px;
+
+    background: rgba(255,255,255,0.2);
+    color: white;
+    font-size: 14px;
+
+    resize: none;
+    overflow: hidden;
+}
+
+/* PLACEHOLDER COLOR */
+.modal-content input::placeholder,
+.modal-content textarea::placeholder {
+    color: #ddd;
+}
+
+/* FOCUS EFFECT */
+.modal-content input:focus,
+.modal-content textarea:focus {
+    box-shadow: 0 0 10px rgba(0,198,255,0.7);
+}
+
+/* ACTION BUTTONS */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* BUTTON STYLE */
+.modal-actions button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+/* ADD BUTTON */
+.modal-actions button:first-child {
+    background: #00c6ff;
+    color: white;
+}
+
+.modal-actions button:first-child:hover {
+    background: #0072ff;
+}
+
+/* CLOSE BUTTON */
+.modal-actions button:last-child {
+    background: rgba(255,255,255,0.3);
+    color: white;
+}
+
+.modal-actions button:last-child:hover {
+    background: rgba(255,255,255,0.5);
+}
+
+/* ANIMATION */
+@keyframes scaleIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
