@@ -18,4 +18,20 @@ public class UserService {
     public User findByUsername(String username) {
         return repository.findByUsername(username).orElse(null);
     }
+
+    public User register(User user) {
+        return repository.save(user);
+    }
+
+    public User login(String username, String password) {
+
+        // ✅ FIXED LINE
+        User user = repository.findByUsername(username).orElse(null);
+
+        if (user != null && user.getPassword().equals(password)) {
+            return user;
+        }
+
+        return null;
+    }
 }

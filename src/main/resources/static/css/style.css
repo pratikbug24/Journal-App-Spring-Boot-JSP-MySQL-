@@ -252,3 +252,57 @@ body {
         opacity: 1;
     }
 }
+
+.container {
+    width: 300px;
+    margin: 100px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+input {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: blue;
+    color: white;
+    border: none;
+}
+
+/* TOP BAR */
+.top-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 10px;
+    padding: 0 10px;
+}
+
+/* USER NAME */
+.user-info {
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* LOGOUT BUTTON */
+.logout button {
+    background: #ff4d4d;
+    border: none;
+    padding: 8px 14px;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.logout button:hover {
+    background: #cc0000;
+}

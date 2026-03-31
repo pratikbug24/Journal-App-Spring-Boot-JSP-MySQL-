@@ -10,6 +10,21 @@
 
 <div class="wrapper">
 
+<div class="top-bar">
+
+    <!-- 👤 Username (LEFT) -->
+    <div class="user-info">
+        Welcome, ${sessionScope.user.username}
+    </div>
+
+    <!-- 🚪 Logout (RIGHT) -->
+    <div class="logout">
+        <a href="/logout">
+            <button>Logout</button>
+        </a>
+    </div>
+
+</div>
     <div class="header">
         <h1>📔 Journal Dashboard</h1>
     </div>
