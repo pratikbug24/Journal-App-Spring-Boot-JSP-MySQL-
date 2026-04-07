@@ -18,7 +18,12 @@ public class AuthController {
     @GetMapping("/")
     public String loginPage(HttpSession session) {
 
-        return "index";
+        // ✅ If already logged in → go to home
+        if (session.getAttribute("user") != null) {
+            return "redirect:/home";
+        }
+
+        return "login";
     }
 
     @GetMapping("/register")
