@@ -36,6 +36,44 @@ public class PageController {
         return "index";   // index.jsp
     }
 
+    // Create new journal entry (JSP form)
+    @PostMapping("/journal/create")
+    public String createEntry(@RequestParam String title,
+                              @RequestParam String content,
+                              HttpSession session,
+                              Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        JournalEntry entry = new JournalEntry();
+        entry.setTitle(title);
+        entry.setContent(content);
+        entry.setUser(user);
+
+        journalEntryService.saveEntry(entry);
+
+        return "redirect:/home";
+    }
+
+    // Delete journal entry (JSP form)
+    @PostMapping("/journal/delete/{id}")
+    public String deleteEntry(@PathVariable Long id, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        JournalEntry entry = journalEntryService.getById(id);
+        if (entry != null && entry.getUser() != null
+                && entry.getUser().getId().equals(user.getId())) {
+            journalEntryService.delete(id);
+        }
+
+        return "redirect:/home";
+    }
+
     @GetMapping("/profile")
     public String profile(HttpSession session) {
         if (session.getAttribute("user") == null) {

@@ -14,9 +14,7 @@ public class JournalEntry {
     private String content;
     private LocalDateTime date;
 
-    // 🔥 FIX: Add relationship with User
     @ManyToOne
-    @JoinColumn(name = "user_id") // creates foreign key in DB
     private User user;
 
     public JournalEntry() {}

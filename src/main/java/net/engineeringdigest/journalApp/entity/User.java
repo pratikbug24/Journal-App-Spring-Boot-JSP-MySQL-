@@ -1,5 +1,8 @@
 package net.engineeringdigest.journalApp.entity;
 
+
+
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -23,8 +26,7 @@ public class User {
     private boolean darkTheme = false;
     private String language = "en";
 
-    // 🔥 FIX: mappedBy added (VERY IMPORTANT)
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     private List<JournalEntry> journalEntries;
 
     public User() {}

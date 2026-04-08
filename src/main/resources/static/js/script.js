@@ -45,12 +45,12 @@ function saveSettings() {
 /* LOAD ENTRIES */
 async function loadEntries() {
     try {
-        const res = await fetch(API_URL);
+        const res = await fetch(API_URL, { credentials: 'include' });
         const data = await res.json();
-        
+
         // Sort by newest first by default
-        allEntries = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        
+        allEntries = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
         renderEntries(allEntries);
         updateStats();
     } catch (error) {
@@ -62,9 +62,9 @@ async function loadEntries() {
 /* UPDATE STATS */
 function updateStats() {
     document.getElementById('totalEntries').textContent = allEntries.length;
-    
+
     if (allEntries.length > 0) {
-        const latestDate = new Date(allEntries[0].createdAt);
+        const latestDate = new Date(allEntries[0].date);
         document.getElementById('latestDate').textContent = formatDate(latestDate);
     } else {
         document.getElementById('latestDate').textContent = '-';
@@ -81,7 +81,7 @@ function formatDate(date) {
 function renderEntries(entries) {
     const container = document.getElementById("entries");
     const emptyState = document.getElementById("emptyState");
-    
+
     container.innerHTML = "";
 
     if (entries.length === 0) {
@@ -96,13 +96,9 @@ function renderEntries(entries) {
         div.className = "entry";
         div.style.animationDelay = `${index * 0.05}s`;
 
-        const date = entry.createdAt ? new Date(entry.createdAt) : new Date();
-        const tagsHtml = entry.tags && entry.tags.length > 0 
-            ? `<div class="entry-tags">${entry.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>` 
-            : '';
+        const date = entry.date ? new Date(entry.date) : new Date();
 
         div.innerHTML = `
-            ${tagsHtml}
             <h3>${entry.title}</h3>
             <p>${entry.content}</p>
             <div class="entry-footer">${formatDate(date)}</div>
@@ -121,34 +117,33 @@ function renderEntries(entries) {
 /* FILTER ENTRIES (Search) */
 function filterEntries() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    
+
     const filtered = allEntries.filter(entry => {
         return entry.title.toLowerCase().includes(searchTerm) ||
-               entry.content.toLowerCase().includes(searchTerm) ||
-               (entry.tags && entry.tags.some(tag => tag.toLowerCase().includes(searchTerm)));
+               entry.content.toLowerCase().includes(searchTerm);
     });
-    
+
     renderEntries(filtered);
 }
 
 /* SORT ENTRIES */
 function sortEntries() {
     const sortBy = document.getElementById('sortSelect').value;
-    
+
     let sorted = [...allEntries];
-    
+
     switch (sortBy) {
         case 'newest':
-            sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
             break;
         case 'oldest':
-            sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
             break;
         case 'title':
             sorted.sort((a, b) => a.title.localeCompare(b.title));
             break;
     }
-    
+
     renderEntries(sorted);
 }
 
@@ -156,24 +151,21 @@ function sortEntries() {
 async function addEntry() {
     const title = document.getElementById("title").value;
     const content = document.getElementById("content").value;
-    const tagsInput = document.getElementById("tags").value;
-    
+
     if (!title || !content) {
         alert("Please fill all fields");
         return;
     }
-    
-    const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
 
     await fetch(API_URL, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ title, content, tags })
+        credentials: 'include',
+        body: JSON.stringify({ title, content })
     });
 
     document.getElementById("title").value = "";
     document.getElementById("content").value = "";
-    document.getElementById("tags").value = "";
 
     closeModal();
     loadEntries();
@@ -182,7 +174,10 @@ async function addEntry() {
 /* DELETE ENTRY */
 async function deleteEntry(id) {
     if (confirm('Are you sure you want to delete this entry?')) {
-        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        await fetch(`${API_URL}/${id}`, {
+            method: "DELETE",
+            credentials: 'include'
+        });
         loadEntries();
     }
 }
