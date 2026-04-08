@@ -7,16 +7,22 @@
 <body>
 
 <div class="container">
-    <h2>Login</h2>
+    <div class="auth-card">
+        <h2>Welcome Back 👋</h2>
+        <p class="subtitle">Login to your account</p>
 
-    <form action="/login" method="post">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
+        <form action="/login" method="post">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter username" required>
 
-        <button type="submit">Login</button>
-    </form>
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter password" required>
 
-    <p>Don't have account? <a href="/register">Register</a></p>
+            <button type="submit">Login</button>
+        </form>
+
+        <p>Don't have account? <a href="/register">Register</a></p>
+    </div>
 </div>
 
 </body>

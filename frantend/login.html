@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Journal App</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .auth-card h1 {
+            font-size: 2rem;
+            color: #202124;
+            margin-bottom: 8px;
+        }
+
+        .auth-card .subtitle {
+            color: #5f6368;
+            margin-bottom: 30px;
+        }
+
+        .auth-form {
+            text-align: left;
+        }
+
+        .auth-form label {
+            display: block;
+            margin-bottom: 8px;
+            color: #5f6368;
+            font-weight: 500;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .auth-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .auth-links {
+            margin-top: 20px;
+            color: #5f6368;
+        }
+
+        .auth-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        .error-msg {
+            background: #fce8e6;
+            color: #c5221f;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1>📔 Journal App</h1>
+            <p class="subtitle">Welcome back! Please login to continue.</p>
+            
+            <div id="errorMsg" class="error-msg"></div>
+            
+            <form class="auth-form" onsubmit="handleLogin(event)">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                
+                <button type="submit" class="auth-btn" id="loginBtn">Login</button>
+            </form>
+            
+            <div class="auth-links">
+                Don't have an account? <a href="register.html">Register here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if already logged in
+        const user = localStorage.getItem('journalUsername');
+        if (user) {
+            // Check with backend if session is valid
+            fetch('http://localhost:8080/api/journal', { 
+                credentials: 'include' 
+            })
+            .then(() => {
+                window.location.href = 'index.html';
+            })
+            .catch(() => {
+                // Session expired, stay on login
+            });
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMsg = document.getElementById('errorMsg');
+
+            loginBtn.textContent = 'Logging in...';
+            loginBtn.classList.add('loading');
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('username', username);
+                formData.append('password', password);
+
+                const response = await fetch('http://localhost:8080/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData,
+                    credentials: 'include'
+                });
+
+                if (response.redirected) {
+                    // Login successful, redirect to index
+                    localStorage.setItem('journalUsername', username);
+                    window.location.href = response.url;
+                } else {
+                    // Login failed
+                    errorMsg.textContent = 'Invalid username or password';
+                    errorMsg.style.display = 'block';
+                    loginBtn.textContent = 'Login';
+                    loginBtn.classList.remove('loading');
+                }
+            } catch (error) {
+                errorMsg.textContent = 'Connection error. Please try again.';
+                errorMsg.style.display = 'block';
+                loginBtn.textContent = 'Login';
+                loginBtn.classList.remove('loading');
+            }
+        }
+    </script>
+</body>
+</html>
