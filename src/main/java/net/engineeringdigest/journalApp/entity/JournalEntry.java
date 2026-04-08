@@ -14,6 +14,11 @@ public class JournalEntry {
     private String content;
     private LocalDateTime date;
 
+    // 🔥 FIX: Add relationship with User
+    @ManyToOne
+    @JoinColumn(name = "user_id") // creates foreign key in DB
+    private User user;
+
     public JournalEntry() {}
 
     // Getters & Setters
@@ -27,4 +32,7 @@ public class JournalEntry {
 
     public LocalDateTime getDate() { return date; }
     public void setDate(LocalDateTime date) { this.date = date; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 }

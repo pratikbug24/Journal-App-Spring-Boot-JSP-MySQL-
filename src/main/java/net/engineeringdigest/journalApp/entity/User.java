@@ -1,8 +1,5 @@
 package net.engineeringdigest.journalApp.entity;
 
-
-
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -16,7 +13,18 @@ public class User {
     private String username;
     private String password;
 
-    @OneToMany
+    // Profile fields
+    private String fullName;
+    private String email;
+    private String bio;
+    private String profileImage;
+
+    // Preferences
+    private boolean darkTheme = false;
+    private String language = "en";
+
+    // 🔥 FIX: mappedBy added (VERY IMPORTANT)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JournalEntry> journalEntries;
 
     public User() {}
@@ -34,4 +42,23 @@ public class User {
     public void setJournalEntries(List<JournalEntry> journalEntries) {
         this.journalEntries = journalEntries;
     }
+
+    // Profile getters & setters
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
+
+    public String getProfileImage() { return profileImage; }
+    public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
+
+    public boolean isDarkTheme() { return darkTheme; }
+    public void setDarkTheme(boolean darkTheme) { this.darkTheme = darkTheme; }
+
+    public String getLanguage() { return language; }
+    public void setLanguage(String language) { this.language = language; }
 }

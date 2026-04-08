@@ -30,4 +30,8 @@ public class JournalEntryService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    public List<JournalEntry> getJournalEntriesByUser(Long userId) {
+        return repository.findByUser_Id(userId);
+    }
 }

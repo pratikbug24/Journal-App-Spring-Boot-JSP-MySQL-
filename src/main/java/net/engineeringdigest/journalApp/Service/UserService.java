@@ -34,4 +34,16 @@ public class UserService {
 
         return null;
     }
+
+    public User findById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public User updateUser(User user) {
+        return repository.save(user);
+    }
+
+    public void deleteUser(Long id) {
+        repository.deleteById(id);
+    }
 }
