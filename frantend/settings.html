@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - Journal App</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .settings-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .settings-section {
+        background: var(--card-bg);
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 20px var(--shadow-light);
+    }
+
+    .settings-section h2 {
+        font-size: 1.2rem;
+        color: var(--card-text);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .setting-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--input-border);
+    }
+
+    .setting-item:last-child {
+        border-bottom: none;
+    }
+
+    .setting-info h3 {
+        font-size: 1rem;
+        color: var(--card-text);
+        margin-bottom: 4px;
+    }
+
+    .setting-info p {
+        font-size: 0.85rem;
+        color: var(--card-subtext);
+    }
+
+    .toggle-switch {
+        position: relative;
+        width: 50px;
+        height: 26px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.3s;
+        border-radius: 26px;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    input:checked + .toggle-slider:before {
+        transform: translateX(24px);
+    }
+
+    .btn {
+        padding: 12px 24px;
+        background: var(--btn-primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-danger {
+        background: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+    }
+
+    .success-msg {
+        background: #e6f4ea;
+        color: #1e8e3e;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    @media (max-width: 500px) {
+        .setting-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="logo">
+    <span class="logo-icon">📔</span>
+    <span class="logo-text">Journal App</span>
+  </div>
+  <div class="top-links">
+    <a href="index.html" class="top-link"><i class="fas fa-home"></i> Home</a>
+    <a href="profile.html" class="top-link"><i class="fas fa-user"></i> Profile</a>
+    <a href="#" class="top-link" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+</div>
+
+<div class="wrapper">
+  <div class="settings-container">
+
+    <div id="successMsg" class="success-msg"></div>
+
+    <!-- Theme Settings -->
+    <div class="settings-section">
+      <h2><i class="fas fa-palette"></i> Appearance</h2>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <h3>Dark Mode</h3>
+          <p>Switch between light and dark theme</p>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="darkModeToggle" onchange="toggleTheme()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Data Management -->
+    <div class="settings-section">
+      <h2><i class="fas fa-database"></i> Data Management</h2>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <h3>Export Journal</h3>
+          <p>Download your journal as PDF</p>
+        </div>
+        <button class="btn" onclick="exportToPDF()">
+          <i class="fas fa-file-pdf"></i> Export PDF
+        </button>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <h3>Export JSON</h3>
+          <p>Download your data as JSON</p>
+        </div>
+        <button class="btn" onclick="exportToJSON()">
+          <i class="fas fa-file-code"></i> Export JSON
+        </button>
+      </div>
+    </div>
+
+    <!-- Send Journal -->
+    <div class="settings-section">
+      <h2><i class="fas fa-paper-plane"></i> Share Journal</h2>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <h3>Send via Email</h3>
+          <p>Send your journal entries to your email</p>
+        </div>
+        <button class="btn" onclick="showSendEmailModal()">
+          <i class="fas fa-envelope"></i> Send Email
+        </button>
+      </div>
+    </div>
+
+    <!-- Account -->
+    <div class="settings-section">
+      <h2><i class="fas fa-user-cog"></i> Account</h2>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <h3>Edit Profile</h3>
+          <p>Update your name, email, bio</p>
+        </div>
+        <a href="profile.html" class="btn">
+          <i class="fas fa-edit"></i> Edit
+        </a>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <h3>Delete Account</h3>
+          <p>Permanently delete your account and data</p>
+        </div>
+        <button class="btn btn-danger" onclick="confirmDeleteAccount()">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Send Email Modal -->
+<div id="emailModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2><i class="fas fa-paper-plane"></i> Send Journal via Email</h2>
+
+    <div class="form-group">
+      <label for="recipientEmail">Recipient Email</label>
+      <input type="email" id="recipientEmail" placeholder="Enter email address">
+    </div>
+
+    <div class="form-group">
+      <label for="emailSubject">Subject</label>
+      <input type="text" id="emailSubject" placeholder="Email subject">
+    </div>
+
+    <div class="form-group">
+      <label>
+        <input type="checkbox" id="sendAllEntries"> Send all entries
+      </label>
+    </div>
+
+    <button class="btn" onclick="sendJournalEmail()">Send Email</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+  // Check auth
+  checkAuth();
+
+  // Load theme preference
+  const darkTheme = localStorage.getItem('journalDarkTheme') === 'true';
+  document.getElementById('darkModeToggle').checked = darkTheme;
+
+  function toggleTheme() {
+      const isDark = document.getElementById('darkModeToggle').checked;
+      localStorage.setItem('journalDarkTheme', isDark);
+
+      if (isDark) {
+          document.body.classList.add('dark-theme');
+      } else {
+          document.body.classList.remove('dark-theme');
+      }
+
+      // Save to backend
+      fetch('http://localhost:8080/api/user/preferences', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ darkTheme: isDark }),
+          credentials: 'include'
+      });
+  }
+
+  async function exportToPDF() {
+      try {
+          const response = await fetch('http://localhost:8080/api/journal/export/pdf', {
+              credentials: 'include'
+          });
+
+          if (response.ok) {
+              const blob = await response.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'journal-export.pdf';
+              a.click();
+              showSuccess('Journal exported to PDF successfully!');
+          } else {
+              alert('Failed to export PDF');
+          }
+      } catch (error) {
+          console.error("Error exporting PDF:", error);
+          // Fallback: create simple PDF with browser print
+          window.print();
+      }
+  }
+
+  async function exportToJSON() {
+      try {
+          const response = await fetch('http://localhost:8080/api/journal', {
+              credentials: 'include'
+          });
+
+          if (response.ok) {
+              const entries = await response.json();
+              const data = {
+                  exportDate: new Date().toISOString(),
+                  username: localStorage.getItem('journalUsername'),
+                  entries: entries
+              };
+
+              const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'journal-export.json';
+              a.click();
+              showSuccess('Journal exported to JSON successfully!');
+          }
+      } catch (error) {
+          console.error("Error exporting JSON:", error);
+          alert('Failed to export JSON');
+      }
+  }
+
+  function showSendEmailModal() {
+      document.getElementById('emailModal').style.display = 'block';
+  }
+
+  function closeModal() {
+      document.getElementById('emailModal').style.display = 'none';
+  }
+
+  async function sendJournalEmail() {
+      const email = document.getElementById('recipientEmail').value;
+      const subject = document.getElementById('emailSubject').value;
+
+      if (!email) {
+          alert('Please enter recipient email');
+          return;
+      }
+
+      try {
+          const response = await fetch('http://localhost:8080/api/journal/send-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, subject }),
+              credentials: 'include'
+          });
+
+          if (response.ok) {
+              showSuccess('Journal sent to email successfully!');
+              closeModal();
+          } else {
+              alert('Failed to send email');
+          }
+      } catch (error) {
+          console.error("Error sending email:", error);
+          alert('Failed to send email. Make sure backend is running.');
+      }
+  }
+
+  function confirmDeleteAccount() {
+      if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+          if (confirm('This will permanently delete all your journal entries. Continue?')) {
+              deleteAccount();
+          }
+      }
+  }
+
+  async function deleteAccount() {
+      try {
+          const response = await fetch('http://localhost:8080/api/user', {
+              method: 'DELETE',
+              credentials: 'include'
+          });
+
+          if (response.ok) {
+              localStorage.clear();
+              window.location.href = 'login.html';
+          } else {
+              alert('Failed to delete account');
+          }
+      } catch (error) {
+          console.error("Error deleting account:", error);
+          alert('Failed to delete account');
+      }
+  }
+
+  function showSuccess(message) {
+      const msg = document.getElementById('successMsg');
+      msg.textContent = message;
+      msg.style.display = 'block';
+
+      setTimeout(() => {
+          msg.style.display = 'none';
+      }, 5000);
+  }
+
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+      const modal = document.getElementById('emailModal');
+      if (event.target == modal) {
+          closeModal();
+      }
+  }
+</script>
+</body>
+</html>

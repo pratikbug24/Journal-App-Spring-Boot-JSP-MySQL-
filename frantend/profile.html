@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Journal App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .profile-header {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px var(--shadow-light);
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--card-text);
+            margin-bottom: 5px;
+        }
+
+        .profile-username {
+            color: var(--card-subtext);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .profile-email {
+            color: var(--card-subtext);
+            font-size: 0.9rem;
+        }
+
+        .profile-bio {
+            margin-top: 15px;
+            color: var(--card-text);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .profile-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px var(--shadow-light);
+        }
+
+        .profile-section h2 {
+            font-size: 1.3rem;
+            color: var(--card-text);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--card-subtext);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--bg-secondary);
+            color: var(--card-text);
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: var(--btn-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            color: var(--card-subtext);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .success-msg {
+            background: #e6f4ea;
+            color: #1e8e3e;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-msg {
+            background: #fce8e6;
+            color: #c5221f;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="logo">
+        <span class="logo-icon">📔</span>
+        <span class="logo-text">Journal App</span>
+    </div>
+    <div class="top-links">
+        <a href="index.html" class="top-link"><i class="fas fa-home"></i> Home</a>
+        <a href="settings.html" class="top-link"><i class="fas fa-cog"></i> Settings</a>
+        <a href="#" class="top-link" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+</div>
+
+<div class="wrapper">
+    <div class="profile-container">
+
+        <div id="successMsg" class="success-msg"></div>
+        <div id="errorMsg" class="error-msg"></div>
+
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar" id="avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-name" id="displayName">Your Name</div>
+            <div class="profile-username">@<span id="usernameDisplay">username</span></div>
+            <div class="profile-email"><i class="fas fa-envelope"></i> <span id="emailDisplay">No email added</span></div>
+            <div class="profile-bio" id="bioDisplay">No bio added yet. Tell us about yourself!</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="profile-section">
+            <h2><i class="fas fa-chart-bar"></i> Your Stats</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalEntries">0</div>
+                    <div class="stat-label">Total Entries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalWords">0</div>
+                    <div class="stat-label">Total Words</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="daysActive">0</div>
+                    <div class="stat-label">Days Active</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Profile Form -->
+        <div class="profile-section">
+            <h2><i class="fas fa-edit"></i> Edit Profile</h2>
+            <form id="profileForm" onsubmit="handleProfileUpdate(event)">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" name="bio" placeholder="Tell us about yourself..."></textarea>
+                </div>
+
+                <button type="submit" class="btn">Save Changes</button>
+            </form>
+        </div>
+
+        <!-- Change Password -->
+        <div class="profile-section">
+            <h2><i class="fas fa-lock"></i> Change Password</h2>
+            <form id="passwordForm" onsubmit="handlePasswordChange(event)">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" id="currentPassword" name="currentPassword" placeholder="Enter current password">
+                </div>
+
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password">
+                </div>
+
+                <button type="submit" class="btn">Update Password</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    // Check auth on load
+    checkAuth();
+
+    // Load profile data
+    loadProfileData();
+
+    async function loadProfileData() {
+        try {
+            const response = await fetch('http://localhost:8080/api/user/profile', {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const user = await response.json();
+
+                // Update UI
+                document.getElementById('usernameDisplay').textContent = user.username || 'username';
+                document.getElementById('displayName').textContent = user.fullName || user.username || 'Your Name';
+                document.getElementById('emailDisplay').textContent = user.email || 'No email added';
+                document.getElementById('bioDisplay').textContent = user.bio || 'No bio added yet. Tell us about yourself!';
+
+                // Form fields
+                document.getElementById('fullName').value = user.fullName || '';
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('bio').value = user.bio || '';
+
+                // Avatar
+                const initial = (user.username || 'U').charAt(0).toUpperCase();
+                document.getElementById('avatar').innerHTML = initial;
+
+                // Stats
+                loadStats();
+            }
+        } catch (error) {
+            console.error("Error loading profile:", error);
+            // Load from localStorage as fallback
+            const username = localStorage.getItem('journalUsername');
+            if (username) {
+                document.getElementById('usernameDisplay').textContent = username;
+                document.getElementById('displayName').textContent = username;
+                document.getElementById('avatar').innerHTML = username.charAt(0).toUpperCase();
+            }
+            loadStats();
+        }
+    }
+
+    async function loadStats() {
+        try {
+            const response = await fetch('http://localhost:8080/api/journal', {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const entries = await response.json();
+
+                // Calculate stats
+                const totalEntries = entries.length;
+                let totalWords = 0;
+                const dates = new Set();
+
+                entries.forEach(entry => {
+                    totalWords += (entry.content || '').split(/\s+/).filter(w => w).length;
+                    if (entry.date) {
+                        dates.add(entry.date.split('T')[0]);
+                    }
+                });
+
+                document.getElementById('totalEntries').textContent = totalEntries;
+                document.getElementById('totalWords').textContent = totalWords;
+                document.getElementById('daysActive').textContent = dates.size;
+            }
+        } catch (error) {
+            console.error("Error loading stats:", error);
+        }
+    }
+
+    async function handleProfileUpdate(event) {
+        event.preventDefault();
+
+        const fullName = document.getElementById('fullName').value;
+        const email = document.getElementById('email').value;
+        const bio = document.getElementById('bio').value;
+
+        try {
+            const response = await fetch('http://localhost:8080/api/user/profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ fullName, email, bio }),
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showSuccess('Profile updated successfully!');
+                loadProfileData();
+            } else {
+                showError(data.message || 'Failed to update profile');
+            }
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            showError('Cannot connect to server');
+        }
+    }
+
+    async function handlePasswordChange(event) {
+        event.preventDefault();
+
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (newPassword !== confirmPassword) {
+            showError('New passwords do not match');
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            showError('Password must be at least 6 characters');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/user/password', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ currentPassword, newPassword }),
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showSuccess('Password updated successfully!');
+                document.getElementById('passwordForm').reset();
+            } else {
+                showError(data.message || 'Failed to update password');
+            }
+        } catch (error) {
+            console.error("Error changing password:", error);
+            showError('Cannot connect to server');
+        }
+    }
+
+    function showSuccess(message) {
+        const msg = document.getElementById('successMsg');
+        msg.textContent = message;
+        msg.style.display = 'block';
+        document.getElementById('errorMsg').style.display = 'none';
+
+        setTimeout(() => {
+            msg.style.display = 'none';
+        }, 5000);
+    }
+
+    function showError(message) {
+        const msg = document.getElementById('errorMsg');
+        msg.textContent = message;
+        msg.style.display = 'block';
+        document.getElementById('successMsg').style.display = 'none';
+
+        setTimeout(() => {
+            msg.style.display = 'none';
+        }, 5000);
+    }
+</script>
+</body>
+</html>
